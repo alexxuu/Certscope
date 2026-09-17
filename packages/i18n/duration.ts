@@ -87,12 +87,24 @@ const DURATION_UNITS = [
   { value: "years", seconds: 31_536_000, snap: 21 * 24 * 3_600 },
 ] as const;
 
+// Tracker types whose data persists until explicitly cleared. When such a
+// tracker has no max-age, its lifetime is "persistent" rather than "session"
+// (cookies and session storage are cleared when the session/tab ends).
+const PERSISTENT_TRACKER_TYPES: ReadonlySet<string> = new Set([
+  "LOCAL_STORAGE",
+  "INDEXED_DB",
+  "CACHE_STORAGE",
+]);
+
 export function humanizeSeconds(
   seconds: number | null,
   t: Translator,
+  trackerType?: string | null,
 ): string {
   if (seconds === null || seconds <= 0) {
-    return '';
+    return trackerType != null && PERSISTENT_TRACKER_TYPES.has(trackerType)
+      ? t("duration.persistent")
+      : t("duration.session");
   }
 
   let remaining = seconds;
