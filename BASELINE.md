@@ -107,6 +107,13 @@ make generate WITH_APPS=1
 5. `gen-dev-config.sh` 是外部工具生成的本地快捷脚本，硬编码仓库绝对路径并重复 `make dev-config` 的逻辑；可借鉴其配置值，但本基线以官方 Make target 为准，未将该脚本纳入正式启动流程。
 6. Docker Desktop 对 `quay.io` 使用的 `http.docker.internal:3128` 代理下载 Keycloak 大层速度很慢；宿主机直连 Quay 的 `skopeo copy --override-os linux --override-arch arm64 ... oci-archive:...` 可作为一次性镜像导入和 Registry 故障绕过方案。
 
+## 基线使用注意事项
+
+- 运行 E2E 前，先停止手动启动的 `probod` 实例；E2E 临时实例会占用固定的 `:10080` 和 `:8443` 端口。E2E 完成后再按本文件的启动步骤恢复 Probo。
+- E2E 必须使用 `TZ=UTC`，并设置 `PROBOD_ACME_ROOT_CA` 与 `PROBOD_ACME_ACCOUNT_KEY`；否则可能出现本地 CA 不受信任或时区断言失败。
+- 新终端使用 Go 和 `golangci-lint` 前，将 `/Users/xuhao.alex/.local/go-1.27.1/bin` 与 `/Users/xuhao.alex/.local/bin` 加入 `PATH`。
+- 基线安装入口使用 npm，不使用 bundled pnpm；pnpm 可能把本地包 `@probo/eslint-config` 当作公共包请求并产生 404。
+
 ## 数据库 / 兼容性说明
 
 本次只做环境、构建、启动和测试基线，没有新增 migration、Entity、Service、API、UI 或业务规则修改；因此没有本次引入的数据迁移、tenant isolation、RBAC 或兼容性变化。
