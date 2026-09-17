@@ -13,6 +13,7 @@ export default defineConfig([
   // *.d.ts, ...) stay global rather than being scoped by a wrapping `files`.
   configs.base,
   globalIgnores([
+    ".cache/**",
     "examples/**",
     "pkg/**",
     // Vite public/ assets are copied as-is; not part of any tsconfig project.
