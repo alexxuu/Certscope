@@ -24,6 +24,7 @@ compose/step-ca/secrets/
 compose/step-ca/certs/
 compose/step-ca/templates/
 .sandbox.env
+.podman-compose-runtime.*
 
 # Generated files (codegen)
 __generated__/

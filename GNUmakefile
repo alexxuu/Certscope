@@ -547,6 +547,10 @@ stack-down: ## Stop the docker stack
 stack-ps: ## List the docker stack containers
 	$(DOCKER_COMPOSE) ps
 
+.PHONY: podman-up
+podman-up: ## Start the fixed-port Podman development stack and Probo
+	./scripts/probo-podman-up.sh
+
 .PHONY: psql
 psql: ## Open a psql shell to the postgres container
 	$(DOCKER_COMPOSE) exec postgres psql -U probod -d probod
